@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Machiroy's Room</title>
+    <!-- CSS（カスケーディング・スタイル・シート）はデザインを整えるためのツールです -->
+    <style>
+        /* body: ページ全体の基本設定 */
+        body {
+            background-color: #E0FFFF; /* 2000年代風の水色背景 */
+            color: #000080; /* テキストは少し濃いネイビーブルーに */
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif; /* 昔のWindows風フォント */
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* container: 画面の中央に配置するメインの箱 */
+        .container {
+            width: 800px;
+            margin: 0 auto; /* 中央寄せ */
+            border-right: 20px solid #FF69B4; /* 右側にアクセントカラーのピンクの太い線 */
+            background-color: #FFFFFF; /* 本文の背景は白 */
+            padding: 20px;
+            min-height: 100vh; /* 画面の高さ最低100%を確保 */
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2); /* 少し影をつけて浮き出させる */
+        }
+
+        /* 昔の個人サイトによくあった流れる文字のエリア */
+        .marquee-container {
+            background-color: #000080;
+            color: yellow;
+            font-weight: bold;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        /* 見出し（H1）のデザイン */
+        h1 {
+            text-align: center;
+            border-bottom: 2px dashed #000080; /* 点線の下線 */
+            padding-bottom: 10px;
+        }
+
+        /* カウンター周りのデザイン */
+        .counter-box {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* カウンターの数字本体。昔のCGIカウンター風に */
+        .counter {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: black;
+            color: #00FF00; /* ハッカーっぽい緑 */
+            padding: 5px 15px;
+            border: 3px ridge #808080; /* 立体的な枠線 */
+            letter-spacing: 5px;
+            font-size: 24px;
+        }
+
+        /* 各セクションのタイトル */
+        h2 {
+            background-color: #87CEFA; /* 薄い青 */
+            padding: 5px 10px;
+            border-left: 10px solid #000080; /* 左側に太い線 */
+            font-size: 18px;
+        }
+
+        /* 境界線 */
+        hr {
+            border: 0;
+            border-top: 1px dotted #000080;
+            margin: 20px 0;
+        }
+
+        /* 一番下の画像の配置エリア */
+        .footer-image {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #FF69B4;
+        }
+
+        /* 画像のスタイル */
+        .footer-image img {
+            max-width: 100%;
+            border: 5px solid #000080;
+        }
+
+        /* テーブル（表）のデザイン */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #000080;
+            padding: 10px;
+        }
+        th {
+            background-color: #E0FFFF;
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- marquee: 昔よく使われた文字をスクロールさせるタグ（今は非推奨ですが、当時の雰囲気を出すために使用） -->
+        <div class="marquee-container">
+            <marquee scrollamount="5">☆★ Machiroy's Room へようこそ！ ゆっくりしていってね！ ★☆</marquee>
+        </div>
+
+        <h1>Machiroy's Room 🚧</h1>
+
+        <div class="counter-box">
+            あなたは <span class="counter" id="visitor-count">000000</span> 人目の訪問者です！
+        </div>
+
+        <div class="section">
+            <h2>【自己紹介】</h2>
+            <table>
+                <tr>
+                    <th>名前</th>
+                    <td>Machiroy（マチロイ）</td>
+                </tr>
+                <tr>
+                    <th>所属</th>
+                    <td>社会人（半導体製造装置関係）</td>
+                </tr>
+                <tr>
+                    <th>趣味・関心</th>
+                    <td>ゴルフ⛳、画像/動画生成AI、ゲーム</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>【自分がAIに対して思っていること】</h2>
+            
+            <p><strong>「自分にとってAIとは何か」</strong><br>
+            ー 私のレベルに合わせて何でも教えてくれる超パーソナライズされた先生。</p>
+            
+            <hr>
+            
+            <p><strong>「AIとどう向き合いたいか」</strong><br>
+            ー 安易にAIに答えを求めないようにしたい。</p>
+            
+            <hr>
+            
+            <p><strong>「何を作りたい／探究したいか」</strong><br>
+            ー いろんな意見を取り入れて対話の深堀と行動に移せるようなシステムを作りたい。（台湾のオードリータンらによって作られたPolisのようなものが近い）<br>
+            <br>
+            ー 企業にとって生成AIを使う。という点において、どのように役に立つか、また、どのような危険が潜んでいるのかを探求したい。</p>
+        </div>
+
+        <div class="footer-image">
+            <!-- ユーザーが添付した画像を表示するためのタグ（imgタグ） -->
+            <!-- 同じフォルダにある image.jpg を読み込みます。画像がない場合は代替テキストが表示されます -->
+            <img src="./image.jpg" alt="添付画像（ここに表示されます）" style="width: 50%;" onerror="this.src='https://via.placeholder.com/600x400?text=Please+put+image.jpg+in+same+folder'">
+            <br><br>
+            <small>※ここに添付画像が表示されます。<code>index.html</code>と同じフォルダに <code>image.jpg</code> という名前で画像を配置してください。</small>
+        </div>
+    </div>
+
+    <!-- JavaScript（ジャバスクリプト）はブラウザ上で動くプログラムです -->
+    <!-- 今回はサーバーがないため、ブラウザの記憶領域（localStorage）を使って擬似的にカウンターを作ります -->
+    <script>
+        // ページが読み込まれた時に実行される処理
+        window.onload = function() {
+            // localStorage（ブラウザのメモ帳）からこれまでの訪問回数を取得。なければ98からスタートします。
+            let currentCount = localStorage.getItem('visitorCount');
+            
+            if (currentCount === null) {
+                currentCount = 98; // すぐに100（キリ番）をテストできるように98からスタート
+            } else {
+                // 文字列で保存されているので数値に変換します
+                currentCount = parseInt(currentCount);
+            }
+            
+            // 訪問回数を1増やします
+            currentCount += 1;
+            
+            // 増やした回数をまたlocalStorageに保存します
+            localStorage.setItem('visitorCount', currentCount);
+            
+            // 画面のカウンターの表示を更新します。
+            // 000123 のように、ゼロ埋めして6桁で表示するとそれっぽくなります
+            document.getElementById('visitor-count').innerText = String(currentCount).padStart(6, '0');
+            
+            // % は割り算の余りを出す計算記号です。100で割って余りが0なら、100の倍数（キリ番）です！
+            if (currentCount > 0 && currentCount % 100 === 0) {
+                // 少し時間をおいてからアラートを出します（画面の表示が先に行われるようにするため）
+                setTimeout(function() {
+                    // alert（アラート）は、ブラウザにポップアップメッセージを表示する機能です
+                    alert("✨🎉 キリ番ゲッツ！ 🎉✨\nあなたは " + currentCount + " 人目のお客様です！おめでとうございます！\n（掲示板にカキコしていってね！）");
+                }, 500);
+            }
+        };
+    </script>
+</body>
+</html>
