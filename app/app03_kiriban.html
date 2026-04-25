@@ -61,6 +61,65 @@
         .back-link:hover {
             color: #FF69B4;
         }
+
+        /* BBS用スタイル */
+        .bbs-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 3px double #FF69B4;
+        }
+
+        .bbs-form-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #F8F8FF;
+            border: 2px solid #000080;
+        }
+
+        .bbs-form-table th, .bbs-form-table td {
+            border: 1px solid #000080;
+            padding: 10px;
+        }
+
+        .bbs-form-table th {
+            background-color: #E0FFFF;
+            width: 25%;
+        }
+
+        .bbs-form-table input[type="text"], .bbs-form-table textarea {
+            width: 95%;
+            padding: 5px;
+            border: 1px inset #ccc;
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif;
+        }
+
+        .submit-btn {
+            background-color: #000080;
+            color: white;
+            border: 2px outset #ccc;
+            padding: 5px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .post-box {
+            border: 1px solid #000080;
+            margin-bottom: 15px;
+            background-color: #FFFFFF;
+        }
+
+        .post-header {
+            background-color: #E0FFFF;
+            padding: 5px;
+            border-bottom: 1px dashed #000080;
+            font-size: 14px;
+        }
+
+        .post-body {
+            padding: 10px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -78,7 +137,135 @@
             <p>キリ番を踏むためにF5キーを連打していたキリ番ゲッターの読者もいるのではないでしょうか。<br>さぁ、100番ごとに刻まれるキリ番をゲットするためにF5を連打してみては？</p>
         </div>
 
+        <!-- ここから掲示板（BBS）エリア -->
+        <div class="bbs-section">
+            <h2 style="text-align: center;">📝 キリ番報告 掲示板 📝</h2>
+            <p style="text-align: center; font-size: 14px;">キリ番を踏んだ方は、ぜひ記念カキコをお願いします！</p>
+            
+            <div class="bbs-form-container">
+                <form id="bbs-form">
+                    <table class="bbs-form-table">
+                        <tr>
+                            <th>キリ番 <span style="color:red">*</span></th>
+                            <td><input type="text" id="input-kiriban" placeholder="例: 100" required></td>
+                        </tr>
+                        <tr>
+                            <th>お名前 <span style="color:red">*</span></th>
+                            <td><input type="text" id="input-name" placeholder="名無しさん" required></td>
+                        </tr>
+                        <tr>
+                            <th>コメント <span style="color:red">*</span></th>
+                            <td><textarea id="input-comment" rows="4" placeholder="キリ番ゲッツ！" required></textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">
+                                <button type="submit" class="submit-btn" id="submit-btn">書き込む</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <p id="form-message" style="text-align: center; font-weight: bold; margin-top: 10px;"></p>
+                </form>
+            </div>
+
+            <hr style="border-top: 2px dashed #FF69B4; margin: 30px 0;">
+
+            <h3>カキコ一覧</h3>
+            <div id="posts-container">
+                <p style="text-align: center;">読み込み中...</p>
+            </div>
+        </div>
+
         <a href="../index.html" class="back-link">← Machiroy's Room トップへ戻る</a>
     </div>
+
+    <script>
+        // ページ読み込み時に過去の投稿を取得する
+        window.onload = async function() {
+            await loadPosts();
+        };
+
+        // 投稿を取得して画面に表示する関数
+        async function loadPosts() {
+            const container = document.getElementById('posts-container');
+            try {
+                const response = await fetch('/api/bbs');
+                const data = await response.json();
+
+                if (data.posts && data.posts.length > 0) {
+                    container.innerHTML = ''; // ローディング文字を消す
+                    data.posts.forEach(post => {
+                        const postHtml = `
+                            <div class="post-box">
+                                <div class="post-header">
+                                    <span class="post-number">No.${post.id.toString().slice(-4)}</span>
+                                    <span class="post-name"><b>${post.name}</b> さん</span>
+                                    <span class="post-kiriban">（キリ番: ${post.kiriban}）</span>
+                                    <span class="post-date">${post.date}</span>
+                                </div>
+                                <div class="post-body">
+                                    ${post.comment}
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += postHtml;
+                    });
+                } else {
+                    container.innerHTML = '<p style="text-align: center;">まだ書き込みはありません。最初のカキコをお待ちしています！</p>';
+                }
+            } catch (error) {
+                console.error('BBS load error:', error);
+                container.innerHTML = '<p style="text-align: center; color: red;">掲示板の読み込みに失敗しました。</p>';
+            }
+        }
+
+        // フォーム送信時の処理
+        document.getElementById('bbs-form').addEventListener('submit', async function(e) {
+            e.preventDefault(); // 画面の再読み込みを防ぐ
+
+            const btn = document.getElementById('submit-btn');
+            const msg = document.getElementById('form-message');
+            
+            btn.disabled = true;
+            btn.innerText = "送信中...";
+            msg.innerText = "";
+
+            const kiriban = document.getElementById('input-kiriban').value;
+            const name = document.getElementById('input-name').value;
+            const comment = document.getElementById('input-comment').value;
+
+            try {
+                const response = await fetch('/api/bbs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ kiriban, name, comment })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    msg.style.color = "green";
+                    msg.innerText = "カキコ完了！";
+                    // フォームを空にする
+                    document.getElementById('input-kiriban').value = "";
+                    document.getElementById('input-name').value = "";
+                    document.getElementById('input-comment').value = "";
+                    // 最新の投稿を読み込み直す
+                    await loadPosts();
+                } else {
+                    msg.style.color = "red";
+                    msg.innerText = "エラー: " + (data.error || "送信に失敗しました");
+                }
+            } catch (error) {
+                console.error('BBS post error:', error);
+                msg.style.color = "red";
+                msg.innerText = "通信エラーが発生しました";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "書き込む";
+            }
+        });
+    </script>
 </body>
 </html>
