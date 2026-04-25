@@ -147,27 +147,57 @@
     </div>
 
     <script>
-        // クイズのデータ（配列の中にオブジェクトとして格納）
+        // クイズのデータ（全5問・選択肢は日本語表記）
         const quizData = [
             {
                 image: "./quiz1.png",
                 question: "第1問：このエモいサイバーパンク風の街並みを作るために使用したプロンプトはどれでしょう？",
                 options: [
-                    { text: "A. A futuristic robotic dog in a minimalist neon room.", isCorrect: false },
-                    { text: "B. A cyberpunk city in pixel art style, retro 2000s anime aesthetic.", isCorrect: true },
-                    { text: "C. A photorealistic cityscape at night with flying cars and tall skyscrapers.", isCorrect: false }
+                    { text: "A. ミニマリストなネオン部屋にいる未来的なロボット犬", isCorrect: false },
+                    { text: "B. ピクセルアートスタイルのサイバーパンク都市、2000年代レトロアニメ風", isCorrect: true },
+                    { text: "C. 空飛ぶ車と高い摩天楼がある夜の超リアルな都市風景", isCorrect: false }
                 ],
-                commentary: "正解はB！\n「pixel art style（ドット絵）」と「retro 2000s anime aesthetic（2000年代レトロアニメ風）」という強力なキーワードを入れることで、当時のゲームやアニメのようなエモい雰囲気を再現しています。\nCのようにphotorealistic（実写風）と入れてしまうと、全く違う画像になります。"
+                commentary: "正解はB！\n「ピクセルアートスタイル」と「2000年代レトロアニメ風」という強力なキーワードを入れることで、当時のゲームやアニメのようなエモい雰囲気を再現しています。（英語プロンプト：A cyberpunk city in pixel art style, retro 2000s anime aesthetic.）"
             },
             {
                 image: "./quiz2.png",
                 question: "第2問：この未来的なメカ犬を作るために使用したプロンプトはどれでしょう？",
                 options: [
-                    { text: "A. A fluffy cute puppy playing in a futuristic park.", isCorrect: false },
-                    { text: "B. A cyberpunk city in pixel art style, retro 2000s anime aesthetic.", isCorrect: false },
-                    { text: "C. A futuristic robotic dog in a minimalist neon room.", isCorrect: true }
+                    { text: "A. 未来的な公園で遊んでいるフワフワで可愛い子犬", isCorrect: false },
+                    { text: "B. 水彩画で描かれたスチームパンク風の機械仕掛けの猫", isCorrect: false },
+                    { text: "C. ミニマリストなネオン部屋にいる未来的なロボット犬", isCorrect: true }
                 ],
-                commentary: "正解はC！\n「minimalist neon room（ミニマリストなネオン部屋）」を指定することで、背景がごちゃごちゃせず、主役のロボット犬が際立つ洗練された構図になります。\nAだと普通のモフモフした子犬になってしまいますね！"
+                commentary: "正解はC！\n「ミニマリストなネオン部屋」を指定することで、背景がごちゃごちゃせず、主役のロボット犬が際立つ洗練された構図になります。（英語プロンプト：A futuristic robotic dog in a minimalist neon room.）"
+            },
+            {
+                image: "./quiz3.png",
+                question: "第3問：この温かみのあるカフェを作るために使用したプロンプトはどれでしょう？",
+                options: [
+                    { text: "A. 植物と暖かい照明がある居心地の良いコーヒーショップの内装、スタジオジブリのアニメ風", isCorrect: true },
+                    { text: "B. 現代的で無機質なコンクリート打ちっぱなしのカフェ、写真のような質感", isCorrect: false },
+                    { text: "C. 宇宙ステーションの中にあるサイバーパンク風の喫茶店、ネオンライト", isCorrect: false }
+                ],
+                commentary: "正解はA！\n「スタジオジブリのアニメ風 (studio ghibli anime style)」と入れると、AIはあの特有の温かい色彩と手書きのような優しいタッチを再現してくれます。（英語プロンプト：A cozy coffee shop interior with plants and warm lighting, studio ghibli anime style.）"
+            },
+            {
+                image: "./quiz4.png",
+                question: "第4問：この本物のような甲虫を作るために使用したプロンプトはどれでしょう？",
+                options: [
+                    { text: "A. 色鉛筆で細密に描かれた青い目を持つクワガタの絵", isCorrect: false },
+                    { text: "B. 光る青い目を持つ金属的なカブトムシの超リアルなマクロ撮影、8K解像度", isCorrect: true },
+                    { text: "C. デジタルアートで描かれたファンタジー世界の巨大な光る虫", isCorrect: false }
+                ],
+                commentary: "正解はB！\n「超リアルなマクロ撮影 (hyper-realistic macro shot)」「8K解像度 (8k resolution)」という呪文を入れることで、AIが写真のような圧倒的な質感と精密さを描き出します。（英語プロンプト：A hyper-realistic macro shot of a metallic beetle with glowing blue eyes, 8k resolution.）"
+            },
+            {
+                image: "./quiz5.png",
+                question: "第5問：この幻想的な宇宙飛行士を作るために使用したプロンプトはどれでしょう？",
+                options: [
+                    { text: "A. カラフルな星雲の中を漂う宇宙飛行士、デジタルペインティング、ファンタジーアート", isCorrect: true },
+                    { text: "B. 月面に着陸するアポロ計画の宇宙飛行士、白黒の歴史的写真", isCorrect: false },
+                    { text: "C. レトロなSF映画のポスターに描かれた宇宙飛行士、アメコミ風", isCorrect: false }
+                ],
+                commentary: "正解はA！\n「デジタルペインティング (digital painting)」「ファンタジーアート (fantasy art)」を指定すると、現実の写真ではなく、アーティストが描いたような美しく幻想的なイラストになります。（英語プロンプト：An astronaut floating in a colorful nebula, digital painting, fantasy art.）"
             }
         ];
 
