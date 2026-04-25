@@ -1,43 +1,62 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <!-- 文字化けを防ぐための設定です -->
     <meta charset="UTF-8">
+    
+    <!-- ブラウザのタブに表示されるサイト名です -->
     <title>Machiroy's Room</title>
-    <!-- CSS（カスケーディング・スタイル・シート）はデザインを整えるためのツールです -->
+    
+    <!-- 【CSS（スタイルシート）】
+         ここでは、文字の色や背景色、レイアウトなど「見た目」のデザインを設定しています。
+         HTMLが「骨組み」だとすると、CSSは「服やメイク」のような役割です。 -->
     <style>
-        /* body: ページ全体の基本設定 */
+        /* ページ全体の基本設定 */
         body {
-            background-color: #E0FFFF; /* 2000年代風の水色背景 */
-            color: #000080; /* テキストは少し濃いネイビーブルーに */
-            font-family: "MS Pゴシック", "MS PGothic", sans-serif; /* 昔のWindows風フォント */
+            /* 2000年代風の水色背景色 (#E0FFFF) */
+            background-color: #E0FFFF;
+            
+            /* 文字の基本色を少し濃いネイビーブルーに */
+            color: #000080;
+            
+            /* 昔のWindowsでよく使われていたフォントを指定してレトロ感を演出 */
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif;
+            
+            /* 画面端の不要な余白をなくします */
             margin: 0;
             padding: 0;
         }
         
-        /* container: 画面の中央に配置するメインの箱 */
+        /* 画面の中央に配置するメインの箱（コンテナ） */
         .container {
-            width: 800px;
-            margin: 0 auto; /* 中央寄せ */
-            border-right: 20px solid #FF69B4; /* 右側にアクセントカラーのピンクの太い線 */
-            background-color: #FFFFFF; /* 本文の背景は白 */
-            padding: 20px;
-            min-height: 100vh; /* 画面の高さ最低100%を確保 */
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.2); /* 少し影をつけて浮き出させる */
+            width: 800px; /* 箱の横幅を800ピクセルに固定 */
+            margin: 0 auto; /* 左右の余白を自動(auto)にして中央寄せにします */
+            
+            /* 右側にアクセントカラー（ピンク）の太い線を引きます */
+            border-right: 20px solid #FF69B4;
+            
+            /* 本文エリアの背景色は白にします */
+            background-color: #FFFFFF;
+            padding: 20px; /* 箱の内側に20ピクセルの余白を作ります */
+            min-height: 100vh; /* 箱の最低限の高さを画面いっぱい（100vh）にします */
+            
+            /* 少し影をつけて、箱を背景から浮き出させます */
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* 昔の個人サイトによくあった流れる文字のエリア */
+        /* 昔の個人サイトによくあった、流れる文字（電光掲示板）のエリア */
         .marquee-container {
-            background-color: #000080;
-            color: yellow;
-            font-weight: bold;
+            background-color: #000080; /* 背景はネイビー */
+            color: yellow; /* 文字は黄色 */
+            font-weight: bold; /* 文字を太く */
             padding: 5px;
             margin-bottom: 20px;
         }
 
-        /* 見出し（H1）のデザイン */
+        /* 大見出し（h1タグ）のデザイン */
         h1 {
-            text-align: center;
-            border-bottom: 2px dashed #000080; /* 点線の下線 */
+            text-align: center; /* 文字を中央揃えに */
+            border-bottom: 2px dashed #000080; /* 下に点線を引きます */
             padding-bottom: 10px;
         }
 
@@ -49,29 +68,30 @@
             font-weight: bold;
         }
 
-        /* カウンターの数字本体。昔のCGIカウンター風に */
+        /* カウンターの数字本体のデザイン（昔のCGIカウンター風） */
         .counter {
+            /* デジタル時計のようなカクカクしたフォント */
             font-family: 'Courier New', Courier, monospace;
-            background-color: black;
-            color: #00FF00; /* ハッカーっぽい緑 */
+            background-color: black; /* 背景は黒 */
+            color: #00FF00; /* 文字はハッカーっぽい明るい緑 */
             padding: 5px 15px;
-            border: 3px ridge #808080; /* 立体的な枠線 */
-            letter-spacing: 5px;
+            border: 3px ridge #808080; /* 立体的に見える枠線をつけます */
+            letter-spacing: 5px; /* 数字と数字の間隔を少し空けます */
             font-size: 24px;
         }
 
-        /* 各セクションのタイトル */
+        /* 各セクションの中見出し（h2タグ） */
         h2 {
-            background-color: #87CEFA; /* 薄い青 */
+            background-color: #87CEFA; /* 薄い青の背景 */
             padding: 5px 10px;
-            border-left: 10px solid #000080; /* 左側に太い線 */
+            border-left: 10px solid #000080; /* 左側に太い線を引いて見やすくします */
             font-size: 18px;
         }
 
-        /* 境界線 */
+        /* 区切り線（hrタグ）のデザイン */
         hr {
             border: 0;
-            border-top: 1px dotted #000080;
+            border-top: 1px dotted #000080; /* 点線にします */
             margin: 20px 0;
         }
 
@@ -80,44 +100,52 @@
             text-align: center;
             margin-top: 50px;
             padding-top: 20px;
-            border-top: 2px solid #FF69B4;
+            border-top: 2px solid #FF69B4; /* 上にピンクの線を引きます */
         }
 
-        /* 画像のスタイル */
+        /* 画像そのもののスタイル */
         .footer-image img {
-            max-width: 100%;
-            border: 5px solid #000080;
+            max-width: 100%; /* 画面からはみ出さないように制限 */
+            border: 5px solid #000080; /* 画像の周りに枠線をつけます */
         }
 
-        /* テーブル（表）のデザイン */
+        /* プロフィール用のテーブル（表）のデザイン */
         table {
-            width: 100%;
-            border-collapse: collapse;
+            width: 100%; /* 横幅いっぱいに広げる */
+            border-collapse: collapse; /* 枠線を1本線にまとめる */
             margin-bottom: 20px;
         }
         th, td {
-            border: 1px solid #000080;
-            padding: 10px;
+            border: 1px solid #000080; /* 表の枠線 */
+            padding: 10px; /* セルの中の余白 */
         }
         th {
-            background-color: #E0FFFF;
+            background-color: #E0FFFF; /* 見出しセル（th）だけ色を変えます */
             width: 30%;
         }
     </style>
 </head>
 <body>
+    <!-- 画面の中央に配置されるメインの箱です -->
     <div class="container">
-        <!-- marquee: 昔よく使われた文字をスクロールさせるタグ（今は非推奨ですが、当時の雰囲気を出すために使用） -->
+        
+        <!-- 【marqueeタグ】
+             文字を横にスクロールさせるタグです。現代のWeb開発では非推奨（使わない方がいい）ですが、
+             2000年代の雰囲気を出すためにあえて使用しています。 -->
         <div class="marquee-container">
             <marquee scrollamount="5">☆★ Machiroy's Room へようこそ！ ゆっくりしていってね！ ★☆</marquee>
         </div>
 
         <h1>Machiroy's Room 🚧</h1>
 
+        <!-- 訪問者カウンターを表示するエリア -->
         <div class="counter-box">
+            <!-- プログラムで数字を書き換えるために id="visitor-count" という名前（目印）をつけています。
+                 読み込み中の違和感をなくすため、初期値は「------」にしています。 -->
             あなたは <span class="counter" id="visitor-count">------</span> 人目の訪問者です！
         </div>
 
+        <!-- 自己紹介セクション -->
         <div class="section">
             <h2>【自己紹介】</h2>
             <table>
@@ -136,6 +164,7 @@
             </table>
         </div>
 
+        <!-- AIについての思いセクション -->
         <div class="section">
             <h2>【自分がAIに対して思っていること】</h2>
             
@@ -155,41 +184,53 @@
             ー 企業にとって生成AIを使う。という点において、どのように役に立つか、また、どのような危険が潜んでいるのかを探求したい。</p>
         </div>
 
+        <!-- お気に入り画像表示セクション -->
         <div class="footer-image">
-            <!-- ユーザーが添付した画像を表示するためのタグ（imgタグ） -->
-            <!-- 同じフォルダにある image.jpg を読み込みます。画像がない場合は代替テキストが表示されます -->
+            <!-- imgタグを使って画像を表示します。
+                 src="./image.jpg" は、「このHTMLファイルと同じ場所にある image.jpg を表示して」という意味です。 -->
             <img src="./image.jpg" alt="添付画像（ここに表示されます）" style="width: 50%;" onerror="this.src='https://via.placeholder.com/600x400?text=Please+put+image.jpg+in+same+folder'">
             <br><br>
             <small>※ここに添付画像が表示されます。<code>index.html</code>と同じフォルダに <code>image.jpg</code> という名前で画像を配置してください。</small>
         </div>
     </div>
 
-    <!-- JavaScript（ジャバスクリプト）はブラウザ上で動くプログラムです -->
-    <!-- 今回はサーバーがないため、ブラウザの記憶領域（localStorage）を使って擬似的にカウンターを作ります -->
+    <!-- 【JavaScript（プログラム）】
+         ここから下は、動きを作るためのプログラムです。
+         今回はVercelのデータベースと通信して、訪問者数を取得・更新する処理を行っています。 -->
     <script>
-        // ページが読み込まれた時に実行される処理
+        // window.onload は、「このページ（HTML）が全部読み込まれ終わったら、以下の処理を実行してね」という合図です。
         window.onload = async function() {
             try {
-                // Vercelの裏側（Serverless Functions）に作られたAPIを呼び出します
+                // fetch（フェッチ）を使って、裏側で作った「/api/counter」というAPI（データ通信の窓口）にアクセスします。
                 const response = await fetch('/api/counter');
+                
+                // APIから返ってきたデータをJSON（プログラムで扱いやすいデータ形式）に変換します。
                 const data = await response.json();
                 
-                // データベースから取得したカウント数
+                // データベースから無事にカウント数が取得できた場合、それを currentCount という変数（箱）に入れます。
                 const currentCount = data.count;
                 
-                // 画面のカウンターの表示を更新します。
-                // 000123 のように、ゼロ埋めして6桁で表示するとそれっぽくなります
+                // 画面上のカウンター（id="visitor-count" をつけたspanタグ）の文字を、取得した数字に書き換えます。
+                // .padStart(6, '0') は、「数字が6桁になるように、足りない分は左側に0を埋めてね」という便利な機能です。（例: 12 → 000012）
                 document.getElementById('visitor-count').innerText = String(currentCount).padStart(6, '0');
                 
-                // % は割り算の余りを出す計算記号です。100で割って余りが0なら、100の倍数（キリ番）です！
+                // 【キリ番を判定する仕組み】
+                // 「%」は割り算の余りを計算する記号です。
+                // 「currentCount % 100 === 0」は、「現在の数字を100で割った余りがゼロと等しいか？」という意味になります。
+                // つまり、100, 200, 300...などの100の倍数（キリ番）のときにここが実行されます。
                 if (currentCount > 0 && currentCount % 100 === 0) {
-                    // 少し時間をおいてからアラートを出します（画面の表示が先に行われるようにするため）
+                    
+                    // 画面の数字が更新される前にポップアップが出てしまうのを防ぐため、
+                    // setTimeout を使って 0.5秒（500ミリ秒）だけ少し待ってからアラートを出します。
                     setTimeout(function() {
-                        // alert（アラート）は、ブラウザにポップアップメッセージを表示する機能です
+                        // alert（アラート）は、ブラウザの画面にポップアップメッセージを表示する機能です。
                         alert("✨🎉 キリ番ゲッツ！ 🎉✨\nあなたは " + currentCount + " 人目のお客様です！おめでとうございます！\n（掲示板にカキコしていってね！）");
                     }, 500);
                 }
+                
             } catch (err) {
+                // もしAPIとの通信に失敗したり、データベースが止まったりしていた場合の「エラー処理」です。
+                // プログラムが止まってしまわないように、ここに書いた処理が代わりに実行されます。
                 console.error("Counter API failed", err);
                 document.getElementById('visitor-count').innerText = "ERROR!";
             }
