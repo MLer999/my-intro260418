@@ -3,9 +3,9 @@
 // データベース（Vercel KV）と通信して訪問者数を管理します。
 
 export default async function handler(request, response) {
-  // Vercel KVに接続するための環境変数（Vercelダッシュボードで設定されます）
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
+  // Vercel KV または Upstash Redis に接続するための環境変数
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
   // もしVercelダッシュボードでKV（データベース）が紐付けられていない場合は、
   // エラーにならずに仮の数字(99)を返して、すぐにキリ番テストができるようにします。
