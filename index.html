@@ -225,16 +225,30 @@
                 document.getElementById('visitor-count').innerText = String(currentCount).padStart(6, '0');
                 
                 // 【キリ番を判定する仕組み】
-                // 「%」は割り算の余りを計算する記号です。
-                // 「currentCount % 100 === 0」は、「現在の数字を100で割った余りがゼロと等しいか？」という意味になります。
-                // つまり、100, 200, 300...などの100の倍数（キリ番）のときにここが実行されます。
-                if (currentCount > 0 && currentCount % 100 === 0) {
+                // ① 100の倍数チェック: 100, 200, 300...
+                const isKiribanHundred = currentCount > 0 && currentCount % 100 === 0;
+
+                // ② ぞろ目チェック（3桁以上）: 111, 222, 333, 1111, 2222...
+                // String()で数字を文字列に変換し、全桁が最初の1桁と同じか調べます
+                const numStr = String(currentCount);
+                const isZorome = numStr.length >= 3 && numStr.split('').every(d => d === numStr[0]);
+
+                if (isKiribanHundred || isZorome) {
+                    // キリ番の種類によってメッセージを変える
+                    let type = isZorome ? "ぞろ目" : "キリ番";
                     
                     // 画面の数字が更新される前にポップアップが出てしまうのを防ぐため、
                     // setTimeout を使って 0.5秒（500ミリ秒）だけ少し待ってからアラートを出します。
                     setTimeout(function() {
                         // alert（アラート）は、ブラウザの画面にポップアップメッセージを表示する機能です。
-                        alert("✨🎉 キリ番ゲッツ！ 🎉✨\nあなたは " + currentCount + " 人目のお客様です！おめでとうございます！\n（掲示板にカキコしていってね！）");
+                        // ぞろ目とキリ番でメッセージを出し分けます
+                        if (isZorome && isKiribanHundred) {
+                            alert("✨🎊 キリ番＆ぞろ目 Wゲッツ！！ 🎊✨\nあなたは " + currentCount + " 人目のお客様です！超おめでとうございます！！\n（掲示板にカキコしていってね！）");
+                        } else if (isZorome) {
+                            alert("🎯 ぞろ目ゲッツ！ 🎯\nあなたは " + currentCount + " 人目のお客様です！おめでとうございます！\n（掲示板にカキコしていってね！）");
+                        } else {
+                            alert("✨🎉 キリ番ゲッツ！ 🎉✨\nあなたは " + currentCount + " 人目のお客様です！おめでとうございます！\n（掲示板にカキコしていってね！）");
+                        }
                     }, 500);
                 }
                 
