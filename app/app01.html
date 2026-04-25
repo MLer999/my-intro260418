@@ -97,8 +97,33 @@
         
         <div class="marquee-box">
             <marquee scrollamount="6" style="color: #000080; font-weight: bold;">
-                キリ番踏んだらカキコよろしく！・・・じゃなくて、Stable Diffusion等で生成されたPNG画像をここにドロップしてみてね！裏側に隠された「呪文（プロンプト）」を解析するよ！
+                🔍 AI画像のプロンプトや、スマホ写真の隠しデータを暴いてみよう！画像をドロップするだけであなたの画像の裏側が見えるよ！
             </marquee>
+        </div>
+
+        <!-- 対応画像の説明 -->
+        <table style="width:100%; border-collapse:collapse; margin-bottom: 15px; font-size: 14px;">
+            <tr style="background-color:#000080; color:white;">
+                <th style="padding:6px 10px; text-align:left;">&#x1F5BC; 対応画像の種類</th>
+                <th style="padding:6px 10px; text-align:left;">&#x1F50D; 見られる情報</th>
+            </tr>
+            <tr style="background-color:#F0F8FF;">
+                <td style="padding:6px 10px; border:1px solid #000080;">Stable Diffusion WebUIやComfyUIのPNG画像</td>
+                <td style="padding:6px 10px; border:1px solid #000080;"><b>プロンプト・ネガティブ・シード値など</b></td>
+            </tr>
+            <tr style="background-color:#FFF0F5;">
+                <td style="padding:6px 10px; border:1px solid #000080;">スマホ・カメラで撮影した写真</td>
+                <td style="padding:6px 10px; border:1px solid #000080;"><b>撮影日時・GPS位置・カメラ機種・絞り値・ISO感度など</b></td>
+            </tr>
+            <tr style="background-color:#F0F8FF;">
+                <td style="padding:6px 10px; border:1px solid #000080;">SNS・スクリーンショット経由の画像</td>
+                <td style="padding:6px 10px; border:1px solid #000080; color:gray;">配信時に消去されるためデータなし</td>
+            </tr>
+        </table>
+
+        <!-- 将来機能の予告 -->
+        <div style="background-color:#FFFACD; border:2px dashed #FF8C00; padding:10px; margin-bottom:15px; font-size:13px;">
+            🔧 <b>将来実装予定</b>：どんな画像でもAIが自動で「生成プロンプト候補」を提案する機能を開発中です！お楽しみに！
         </div>
         
         <!-- ここに画像をドラッグ＆ドロップします -->
@@ -179,11 +204,43 @@
                     outputText += "<span class='highlight'>★ ComfyUI Workflow 発見！ ★</span>\n\n";
                     outputText += "Prompt Data:\n" + JSON.stringify(exifData.prompt, null, 2);
                 } 
-                // その他のメタデータ
+                // その他のメタデータ（スマホ写真のEXIFなど）を見やすく表示
                 else {
-                    outputText += "<span class='highlight'>★ その他の隠しデータ発見！ ★</span>\n\n";
-                    // JSON形式にして見やすく表示
-                    outputText += JSON.stringify(exifData, null, 2);
+                    // EXIFデータの日本語ラベル対応表
+                    const labels = {
+                        Make: '📷 カメラメーカー',
+                        Model: '📱 カメラ機種',
+                        DateTime: '📅 撮影日時',
+                        DateTimeOriginal: '📅 撮影日時（オリジナル）',
+                        GPSLatitude: '📍 緯度（GPS）',
+                        GPSLongitude: '📍 経度（GPS）',
+                        GPSAltitude: '🏔 高度（GPS）',
+                        ExposureTime: '⏱ シャッタースピード',
+                        FNumber: '🌀 絞り値（F値）',
+                        ISOSpeedRatings: '💡 ISO感度',
+                        FocalLength: '🔭 焦点距離',
+                        Flash: '⚡ フラッシュ',
+                        ImageWidth: '↔ 画像の横幅',
+                        ImageHeight: '↕ 画像の縦幅',
+                        Orientation: '🔄 向き',
+                        Software: '💻 使用ソフト',
+                        ColorSpace: '🎨 色空間',
+                    };
+
+                    // GPS情報があればGoogleマップリンクを生成
+                    let gmapLink = '';
+                    if (exifData.GPSLatitude && exifData.GPSLongitude) {
+                        const lat = exifData.GPSLatitude;
+                        const lng = exifData.GPSLongitude;
+                        gmapLink = `\n\n<a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" style="color:blue; font-weight:bold;">🗺 この場所をGoogleマップで見る</a>`;
+                    }
+
+                    outputText += "<span class='highlight'>★ 画像の隠しデータ（メタデータ）発見！ ★</span>\n\n";
+                    for (const [key, value] of Object.entries(exifData)) {
+                        const label = labels[key] || ('  ' + key);
+                        outputText += `${label}: ${value}\n`;
+                    }
+                    outputText += gmapLink;
                 }
 
                 // 結果を表示
