@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>プロンプト推測クイズ - Machiroy's App</title>
+    <style>
+        /* 2000年代風のレトロデザイン（index.htmlと統一） */
+        body {
+            background-color: #E0FFFF;
+            color: #000080;
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+
+        .container {
+            width: 800px;
+            margin: 20px auto;
+            border: 3px ridge #000080;
+            background-color: #FFFFFF;
+            padding: 20px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #FF69B4; /* こちらはピンクベース */
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .quiz-image-box {
+            text-align: center;
+            margin: 20px 0;
+            border: 3px solid #000080;
+            padding: 10px;
+            background-color: #F0F8FF;
+        }
+
+        .quiz-image-box img {
+            max-width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            border-bottom: 2px dashed #000080;
+            padding-bottom: 10px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background-color: #E0FFFF;
+            border: 2px outset #000080; /* 立体的なボタン */
+            color: #000080;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: left;
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif;
+        }
+
+        .option-btn:hover {
+            background-color: #FFB6C1; /* マウスを乗せたらピンクに */
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border: 3px double #FF0000;
+            background-color: #FFFFE0;
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FF0000;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .commentary {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .next-btn {
+            display: block;
+            margin: 20px auto 0;
+            background-color: #000080;
+            color: white;
+            border: 2px outset #ccc;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #000080;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 プロンプト推測クイズ 🧠</h1>
+        <p style="text-align: center; font-weight: bold;">Machiroy's Challenge! この画像を生み出した「呪文」はどれだ！？</p>
+        
+        <div id="quiz-area">
+            <div class="quiz-image-box">
+                <img id="quiz-image" src="./quiz1.png" alt="Quiz Image">
+            </div>
+
+            <div class="question-text" id="question-text">
+                第1問：このサイバーパンク風のドット絵を作るために使用したプロンプトはどれでしょう？
+            </div>
+
+            <div class="options-container" id="options-container">
+                <!-- 選択肢がJavaScriptによってここに追加されます -->
+            </div>
+        </div>
+
+        <div class="result-box" id="result-box">
+            <div class="result-title" id="result-title">正解！！</div>
+            <div class="commentary" id="result-commentary">ここに解説が入ります。</div>
+            <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ！</button>
+        </div>
+
+        <a href="../index.html" class="back-link">← Machiroy's Room トップへ戻る</a>
+    </div>
+
+    <script>
+        // クイズのデータ（配列の中にオブジェクトとして格納）
+        const quizData = [
+            {
+                image: "./quiz1.png",
+                question: "第1問：このエモいサイバーパンク風の街並みを作るために使用したプロンプトはどれでしょう？",
+                options: [
+                    { text: "A. A futuristic robotic dog in a minimalist neon room.", isCorrect: false },
+                    { text: "B. A cyberpunk city in pixel art style, retro 2000s anime aesthetic.", isCorrect: true },
+                    { text: "C. A photorealistic cityscape at night with flying cars and tall skyscrapers.", isCorrect: false }
+                ],
+                commentary: "正解はB！\n「pixel art style（ドット絵）」と「retro 2000s anime aesthetic（2000年代レトロアニメ風）」という強力なキーワードを入れることで、当時のゲームやアニメのようなエモい雰囲気を再現しています。\nCのようにphotorealistic（実写風）と入れてしまうと、全く違う画像になります。"
+            },
+            {
+                image: "./quiz2.png",
+                question: "第2問：この未来的なメカ犬を作るために使用したプロンプトはどれでしょう？",
+                options: [
+                    { text: "A. A fluffy cute puppy playing in a futuristic park.", isCorrect: false },
+                    { text: "B. A cyberpunk city in pixel art style, retro 2000s anime aesthetic.", isCorrect: false },
+                    { text: "C. A futuristic robotic dog in a minimalist neon room.", isCorrect: true }
+                ],
+                commentary: "正解はC！\n「minimalist neon room（ミニマリストなネオン部屋）」を指定することで、背景がごちゃごちゃせず、主役のロボット犬が際立つ洗練された構図になります。\nAだと普通のモフモフした子犬になってしまいますね！"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        // クイズを描画する関数
+        function loadQuestion() {
+            const currentQuiz = quizData[currentQuestionIndex];
+            
+            // 画像と問題文をセット
+            document.getElementById("quiz-image").src = currentQuiz.image;
+            document.getElementById("question-text").innerText = currentQuiz.question;
+            
+            // 選択肢エリアをクリア
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            
+            // 結果エリアを隠す
+            document.getElementById("result-box").style.display = "none";
+            document.getElementById("options-container").style.display = "flex";
+
+            // 選択肢ボタンを生成
+            currentQuiz.options.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = option.text;
+                
+                // クリック時の判定処理
+                btn.onclick = () => checkAnswer(option.isCorrect, currentQuiz.commentary);
+                
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // 答え合わせをする関数
+        function checkAnswer(isCorrect, commentary) {
+            const resultBox = document.getElementById("result-box");
+            const resultTitle = document.getElementById("result-title");
+            const resultCommentary = document.getElementById("result-commentary");
+            const nextBtn = document.getElementById("next-btn");
+
+            // 選択肢を隠して結果を表示
+            document.getElementById("options-container").style.display = "none";
+            resultBox.style.display = "block";
+
+            if (isCorrect) {
+                resultTitle.innerText = "✨🎉 大正解！！ 🎉✨";
+                resultTitle.style.color = "#FF00FF"; // マゼンタ
+            } else {
+                resultTitle.innerText = "❌ ザンネン！不正解... ❌";
+                resultTitle.style.color = "blue";
+            }
+
+            resultCommentary.innerText = commentary;
+
+            // 最後の問題かどうかでボタンの文字を変える
+            if (currentQuestionIndex >= quizData.length - 1) {
+                nextBtn.innerText = "トップページに戻る";
+                nextBtn.onclick = () => window.location.href = "../index.html";
+            } else {
+                nextBtn.innerText = "次の問題へ！";
+            }
+        }
+
+        // 次の問題に進む関数
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            }
+        }
+
+        // 最初に1問目を読み込む
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>

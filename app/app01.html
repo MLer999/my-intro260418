@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>AI画像 メタデータ解析ツール - Machiroy's App</title>
+    <!-- exifr: 画像の裏側（メタデータ）を読み取るための便利な外部プログラムです -->
+    <script src="https://cdn.jsdelivr.net/npm/exifr/dist/full.umd.js"></script>
+    <style>
+        /* 2000年代風のレトロデザイン（index.htmlと統一） */
+        body {
+            background-color: #E0FFFF; /* 2000年代風の水色背景 */
+            color: #000080; /* テキストはネイビーブルー */
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); /* 昔っぽい背景パターン */
+        }
+
+        .container {
+            width: 800px;
+            margin: 20px auto;
+            border: 3px ridge #000080; /* 立体的な枠線 */
+            background-color: #FFFFFF;
+            padding: 20px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #000080;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        /* 画像をドロップするエリアのデザイン */
+        .drop-zone {
+            border: 4px dotted #FF69B4; /* ピンクの点線 */
+            padding: 50px;
+            text-align: center;
+            margin: 20px 0;
+            background-color: #FFF0F5; /* 薄いピンク背景 */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        
+        /* ファイルをドラッグして重ねたときの色 */
+        .drop-zone.dragover {
+            background-color: #FFB6C1;
+        }
+
+        /* 解析結果を表示するエリア */
+        .result-area {
+            background-color: #F0F8FF;
+            border: 2px inset #000080; /* へこんだ枠線（昔のテキストエリア風） */
+            padding: 15px;
+            min-height: 200px;
+            white-space: pre-wrap; /* 改行をそのまま表示する */
+            word-wrap: break-word;
+            font-size: 14px;
+            font-family: 'Courier New', Courier, monospace; /* ここだけ等幅フォント */
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #000080;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            color: #FF69B4;
+        }
+
+        /* 抽出したプロンプトをハイライト */
+        .highlight {
+            color: #FF0000; /* 赤色 */
+            font-weight: bold;
+            background-color: yellow; /* 黄色ハイライト */
+        }
+        
+        .marquee-box {
+            border: 1px solid #000080;
+            background-color: #E0FFFF;
+            padding: 2px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 AI画像 メタデータ解析ツール 🔍</h1>
+        
+        <div class="marquee-box">
+            <marquee scrollamount="6" style="color: #000080; font-weight: bold;">
+                キリ番踏んだらカキコよろしく！・・・じゃなくて、Stable Diffusion等で生成されたPNG画像をここにドロップしてみてね！裏側に隠された「呪文（プロンプト）」を解析するよ！
+            </marquee>
+        </div>
+        
+        <!-- ここに画像をドラッグ＆ドロップします -->
+        <div class="drop-zone" id="drop-zone">
+            <p>ここにAI画像（PNG形式など）をドラッグ＆ドロップ<br>（またはクリックしてファイルを選択）</p>
+            <!-- 隠しファイル入力ボタン -->
+            <input type="file" id="file-input" accept="image/png, image/jpeg, image/webp" style="display: none;">
+        </div>
+
+        <h3 style="border-bottom: 2px dashed #000080;">■ 解析結果表示エリア ■</h3>
+        <div class="result-area" id="result-output">
+            準備完了... 画像を待機中。
+        </div>
+
+        <a href="../index.html" class="back-link">← Machiroy's Room トップへ戻る</a>
+    </div>
+
+    <!-- 動きを作るプログラム -->
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const resultOutput = document.getElementById('result-output');
+
+        // ドロップゾーンをクリックしたら、隠しファイル選択を開く
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        // 画像がドラッグされてきたときのアニメーション
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault(); // ブラウザのデフォルトの挙動（画像を開く）をブロック
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        // 画像がドロップされたときの処理
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            // ドロップされたファイルを取得
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                analyzeImage(files[0]);
+            }
+        });
+
+        // ファイル選択ダイアログから選ばれたときの処理
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                analyzeImage(e.target.files[0]);
+            }
+        });
+
+        // 実際に画像を解析する関数
+        async function analyzeImage(file) {
+            resultOutput.innerHTML = "<span style='color: blue;'>解析中... カタカタターンッ！ (Analyzing...)</span>";
+
+            try {
+                // exifrライブラリを使って画像のメタデータを読み取る
+                const exifData = await exifr.parse(file);
+                
+                if (!exifData) {
+                    resultOutput.innerHTML = "<span style='color: red;'>【エラー】メタデータが見つかりませんでした。<br>（LINEやSNSを通した画像はメタデータが削除されていることが多いです。ローカルで生成した元画像を使ってね！）</span>";
+                    return;
+                }
+
+                let outputText = "";
+                
+                // Stable Diffusion (WebUI) は 'parameters' に情報を入れることが多い
+                if (exifData.parameters) {
+                    outputText += "<span class='highlight'>★ Stable Diffusion Parameters 発見！ ★</span>\n\n";
+                    outputText += exifData.parameters;
+                } 
+                // ComfyUIなどは 'workflow' や 'prompt' を直接入れる
+                else if (exifData.workflow || exifData.prompt) {
+                    outputText += "<span class='highlight'>★ ComfyUI Workflow 発見！ ★</span>\n\n";
+                    outputText += "Prompt Data:\n" + JSON.stringify(exifData.prompt, null, 2);
+                } 
+                // その他のメタデータ
+                else {
+                    outputText += "<span class='highlight'>★ その他の隠しデータ発見！ ★</span>\n\n";
+                    // JSON形式にして見やすく表示
+                    outputText += JSON.stringify(exifData, null, 2);
+                }
+
+                // 結果を表示
+                resultOutput.innerHTML = outputText;
+
+            } catch (error) {
+                console.error(error);
+                resultOutput.innerHTML = "<span style='color: red;'>【エラー】解析中に問題が発生しました。未対応のフォーマットの可能性があります。</span>";
+            }
+        }
+    </script>
+</body>
+</html>
