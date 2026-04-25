@@ -168,34 +168,30 @@
     <!-- 今回はサーバーがないため、ブラウザの記憶領域（localStorage）を使って擬似的にカウンターを作ります -->
     <script>
         // ページが読み込まれた時に実行される処理
-        window.onload = function() {
-            // localStorage（ブラウザのメモ帳）からこれまでの訪問回数を取得。なければ98からスタートします。
-            let currentCount = localStorage.getItem('visitorCount');
-            
-            if (currentCount === null) {
-                currentCount = 98; // すぐに100（キリ番）をテストできるように98からスタート
-            } else {
-                // 文字列で保存されているので数値に変換します
-                currentCount = parseInt(currentCount);
-            }
-            
-            // 訪問回数を1増やします
-            currentCount += 1;
-            
-            // 増やした回数をまたlocalStorageに保存します
-            localStorage.setItem('visitorCount', currentCount);
-            
-            // 画面のカウンターの表示を更新します。
-            // 000123 のように、ゼロ埋めして6桁で表示するとそれっぽくなります
-            document.getElementById('visitor-count').innerText = String(currentCount).padStart(6, '0');
-            
-            // % は割り算の余りを出す計算記号です。100で割って余りが0なら、100の倍数（キリ番）です！
-            if (currentCount > 0 && currentCount % 100 === 0) {
-                // 少し時間をおいてからアラートを出します（画面の表示が先に行われるようにするため）
-                setTimeout(function() {
-                    // alert（アラート）は、ブラウザにポップアップメッセージを表示する機能です
-                    alert("✨🎉 キリ番ゲッツ！ 🎉✨\nあなたは " + currentCount + " 人目のお客様です！おめでとうございます！\n（掲示板にカキコしていってね！）");
-                }, 500);
+        window.onload = async function() {
+            try {
+                // Vercelの裏側（Serverless Functions）に作られたAPIを呼び出します
+                const response = await fetch('/api/counter');
+                const data = await response.json();
+                
+                // データベースから取得したカウント数
+                const currentCount = data.count;
+                
+                // 画面のカウンターの表示を更新します。
+                // 000123 のように、ゼロ埋めして6桁で表示するとそれっぽくなります
+                document.getElementById('visitor-count').innerText = String(currentCount).padStart(6, '0');
+                
+                // % は割り算の余りを出す計算記号です。100で割って余りが0なら、100の倍数（キリ番）です！
+                if (currentCount > 0 && currentCount % 100 === 0) {
+                    // 少し時間をおいてからアラートを出します（画面の表示が先に行われるようにするため）
+                    setTimeout(function() {
+                        // alert（アラート）は、ブラウザにポップアップメッセージを表示する機能です
+                        alert("✨🎉 キリ番ゲッツ！ 🎉✨\nあなたは " + currentCount + " 人目のお客様です！おめでとうございます！\n（掲示板にカキコしていってね！）");
+                    }, 500);
+                }
+            } catch (err) {
+                console.error("Counter API failed", err);
+                document.getElementById('visitor-count').innerText = "ERROR!";
             }
         };
     </script>
