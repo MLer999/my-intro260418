@@ -1,0 +1,24 @@
+{
+  "name": "my-intro260418",
+  "version": "1.0.0",
+  "description": "web3概論の課題",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MLer999/my-intro260418.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MLer999/my-intro260418/issues"
+  },
+  "homepage": "https://github.com/MLer999/my-intro260418#readme",
+  "dependencies": {
+    "redis": "^5.12.1"
+  }
+}
