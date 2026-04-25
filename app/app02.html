@@ -116,6 +116,92 @@
             text-decoration: underline;
             font-weight: bold;
         }
+
+        /* 最終結果モーダルのオーバーレイ（背景の暗幕） */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* モーダルの本体ボックス */
+        .modal-box {
+            background-color: #FFFFFF;
+            border: 5px ridge #FF69B4;
+            padding: 30px;
+            width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif;
+        }
+
+        .modal-score {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #FF1493;
+            margin-bottom: 10px;
+        }
+
+        .modal-message {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #FF69B4;
+            padding-bottom: 15px;
+        }
+
+        /* TIPsエリア */
+        .tips-title {
+            background-color: #000080;
+            color: white;
+            padding: 5px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tip-item {
+            border-left: 5px solid #FF69B4;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            background-color: #FFF0F5;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .tip-item strong {
+            display: block;
+            color: #000080;
+            margin-bottom: 4px;
+        }
+
+        .tip-prompt {
+            font-family: 'Courier New', monospace;
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .modal-close-btn {
+            display: block;
+            margin: 20px auto 0;
+            background-color: #000080;
+            color: white;
+            border: 2px outset #ccc;
+            padding: 10px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -144,6 +230,48 @@
         </div>
 
         <a href="../index.html" class="back-link">← Machiroy's Room トップへ戻る</a>
+    </div>
+
+    <!-- 最終結果モーダル（クイズ終了後に表示） -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-score" id="modal-score">5問中 3問 正解！</div>
+            <div class="modal-message" id="modal-message">よくできました！</div>
+
+            <div class="tips-title">💡 生成AIプロンプト TIPsまとめ</div>
+
+            <div class="tip-item">
+                <strong>TIP 1：画風・スタイルを指定すると雰囲気が激変する</strong>
+                スタイルキーワードを入れるだけで、まったく別の絵になります。
+                <br><span class="tip-prompt">例: pixel art style（ドット絵）/ studio ghibli anime style（ジブリ風）/ digital painting（デジタル絵）</span>
+            </div>
+
+            <div class="tip-item">
+                <strong>TIP 2：背景の「密度」を指定して主役を際立たせる</strong>
+                背景をシンプルにすることで、主役が目立つ構図を作れます。
+                <br><span class="tip-prompt">例: minimalist（ミニマリスト）/ simple background（シンプルな背景）</span>
+            </div>
+
+            <div class="tip-item">
+                <strong>TIP 3：「写真品質」キーワードで超リアルな画像が作れる</strong>
+                クオリティを上げるキーワードを足すだけで、一気に写真のような質感になります。
+                <br><span class="tip-prompt">例: hyper-realistic（超リアル）/ 8k resolution（8K解像度）/ macro shot（マクロ撮影）</span>
+            </div>
+
+            <div class="tip-item">
+                <strong>TIP 4：「アート種別」を指定してタッチをコントロールする</strong>
+                「どんな種類の絵か」を指定すると、AIが自動でその表現スタイルに合わせてくれます。
+                <br><span class="tip-prompt">例: fantasy art（ファンタジーアート）/ photorealistic（実写風）/ watercolor（水彩）</span>
+            </div>
+
+            <div class="tip-item">
+                <strong>TIP 5：プロンプトは「英語」の方が高品質になることが多い</strong>
+                AIモデルの多くは英語データで学習しているため、英語のプロンプトの方が意図が正確に伝わりやすいです。
+                日本語でも動きますが、まずは英語で試してみましょう！
+            </div>
+
+            <button class="modal-close-btn" onclick="closeModal()">トップページに戻る</button>
+        </div>
     </div>
 
     <script>
@@ -202,6 +330,7 @@
         ];
 
         let currentQuestionIndex = 0;
+        let score = 0; // 正解数を記録する変数
 
         // クイズを描画する関数
         function loadQuestion() {
@@ -245,7 +374,8 @@
 
             if (isCorrect) {
                 resultTitle.innerText = "✨🎉 大正解！！ 🎉✨";
-                resultTitle.style.color = "#FF00FF"; // マゼンタ
+                resultTitle.style.color = "#FF00FF";
+                score++; // 正解のときだけスコアを加算
             } else {
                 resultTitle.innerText = "❌ ザンネン！不正解... ❌";
                 resultTitle.style.color = "blue";
@@ -255,8 +385,8 @@
 
             // 最後の問題かどうかでボタンの文字を変える
             if (currentQuestionIndex >= quizData.length - 1) {
-                nextBtn.innerText = "トップページに戻る";
-                nextBtn.onclick = () => window.location.href = "../index.html";
+                nextBtn.innerText = "結果を見る！";
+                nextBtn.onclick = () => showFinalModal();
             } else {
                 nextBtn.innerText = "次の問題へ！";
             }
@@ -268,6 +398,35 @@
             if (currentQuestionIndex < quizData.length) {
                 loadQuestion();
             }
+        }
+
+        // 最終結果モーダルを表示する関数
+        function showFinalModal() {
+            const total = quizData.length;
+            document.getElementById('modal-score').innerText = `${total}問中 ${score}問 正解！`;
+
+            // スコアに応じたメッセージを設定
+            let message = "";
+            if (score === total) {
+                message = "🏆 全問正解！！あなたは生成AIプロンプトマスターです！！ 🏆";
+            } else if (score >= 4) {
+                message = "🌟 すごい！もう少しでパーフェクト！センスがありますよ！";
+            } else if (score >= 3) {
+                message = "👍 なかなかの正解率！プロンプトの感覚が身についてきてます！";
+            } else if (score >= 1) {
+                message = "📚 もう一回チャレンジしてみよう！TIPsを参考にしてね！";
+            } else {
+                message = "😅 全問不正解...でも大丈夫！下のTIPsを読んで再挑戦だ！";
+            }
+            document.getElementById('modal-message').innerText = message;
+
+            // モーダルを表示
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        // モーダルを閉じてトップへ戻る関数
+        function closeModal() {
+            window.location.href = "../index.html";
         }
 
         // 最初に1問目を読み込む
