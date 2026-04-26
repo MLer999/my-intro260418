@@ -197,11 +197,15 @@
 
         <!-- お気に入り画像表示セクション -->
         <div class="footer-image">
-            <!-- imgタグを使って画像を表示します。
-                 src="./image.jpg" は、「このHTMLファイルと同じ場所にある image.jpg を表示して」という意味です。 -->
-            <img src="./image.jpg" alt="添付画像（ここに表示されます）" style="width: 50%;" onerror="this.src='https://via.placeholder.com/600x400?text=Please+put+image.jpg+in+same+folder'">
+            <!-- 画像にカーソルを合わせると original.gif に切り替わるように設定 -->
+            <img src="./image.jpg" 
+                 onmouseover="this.src='./original.gif'" 
+                 onmouseout="this.src='./image.jpg'" 
+                 alt="清書後の画像" 
+                 style="width: 50%; cursor: pointer;" 
+                 onerror="this.src='https://via.placeholder.com/600x400?text=Image+Not+Found'">
             <br><br>
-            <small>※ここに添付画像が表示されます。<code>index.html</code>と同じフォルダに <code>image.jpg</code> という名前で画像を配置してください。</small>
+            <small>※カーソルを合わせると、オリジナルの絵（AI清書前）に戻ります。</small>
         </div>
     </div>
 
