@@ -197,42 +197,14 @@
 
         <!-- お気に入り画像表示セクション -->
         <div class="footer-image">
-            <!-- 侍テラコヤのフィロソフィー：URLではなく「クラス名」で状態を管理する方式 -->
-            <img id="toggle-image" 
-                 src="image.jpg" 
-                 onclick="toggleAIImage(this)" 
-                 alt="お気に入り画像" 
-                 style="width: 50%; cursor: pointer; border: 5px solid #000080;" 
-                 onerror="handleImageError(this)">
+            <img src="image.jpg" alt="お気に入り画像" style="width: 50%; border: 5px solid #000080;" onerror="this.src='https://via.placeholder.com/600x400?text=Please+put+image.jpg+in+same+folder'">
             <br><br>
-            <small>※クリックすると、オリジナルの絵（AI清書前）と交互に切り替わります。</small>
+            <small>※ここに添付画像が表示されます。<code>index.html</code>と同じフォルダに <code>image.jpg</code> という名前で画像を配置してください。</small>
         </div>
     </div>
 
     <!-- 【JavaScript（プログラム）】 -->
     <script>
-        // 画像の切り替え用関数
-        function toggleAIImage(el) {
-            // クラス「is-original」が付いているかどうかで判定（フィロソフィー）
-            if (el.classList.contains('is-original')) {
-                // オリジナル表示中なら清書後（image.jpg）へ
-                el.src = "image.jpg";
-                el.classList.remove('is-original');
-            } else {
-                // 清書後を表示中ならオリジナル（original.jpg）へ
-                el.src = "original.jpg";
-                el.classList.add('is-original');
-            }
-        }
-
-        // 画像が読み込めなかった時の処理
-        function handleImageError(el) {
-            console.error("画像読み込み失敗:", el.src);
-            // 無限ループを防ぐ
-            el.onerror = null;
-            el.src = "https://via.placeholder.com/600x400?text=Image+Not+Found";
-        }
-
         // window.onload は、「このページ（HTML）が全部読み込まれ終わったら、以下の処理を実行してね」という合図です。
         window.onload = async function() {
             try {
