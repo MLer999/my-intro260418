@@ -197,7 +197,7 @@
 
         <!-- お気に入り画像表示セクション -->
         <div class="footer-image">
-            <!-- クリックするたびに image.jpg と original.gif を交互に切り替える -->
+            <!-- クリックするたびに image.jpg と original.jpg を交互に切り替える -->
             <img id="toggle-image" 
                  src="image.jpg" 
                  data-mode="after"
@@ -216,7 +216,7 @@
         function toggleAIImage(el) {
             console.log("Current mode:", el.dataset.mode);
             if (el.dataset.mode === 'after') {
-                el.src = "original.gif";
+                el.src = "original.jpg";
                 el.dataset.mode = 'before';
             } else {
                 el.src = "image.jpg";
