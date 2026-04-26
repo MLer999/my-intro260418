@@ -22,28 +22,70 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI画像 プロンプト作成ツール</h1>
+        <h1>🖍️ AI画像 プロンプト作成ツール</h1>
+        
         <div class="tips">
-            <strong>📌 TIPs（1〜5）を選択してください：</strong><br>
-            <label><input type="checkbox" value="鮮やかな色彩"> TIP 1: 鮮やかな色彩</label>
-            <label><input type="checkbox" value="高解像度"> TIP 2: 高解像度</label>
-            <label><input type="checkbox" value="写実的なディテール"> TIP 3: 写実的なディテール</label>
-            <label><input type="checkbox" value="光と影のコントラスト"> TIP 4: 光と影のコントラスト</label>
-            <label><input type="checkbox" value="アート風"> TIP 5: アート風</label>
+            <p><strong>📌 カテゴリ別にキーワードを選択してください（複数選択可）：</strong></p>
+            
+            <div style="margin-bottom: 15px;">
+                <div style="background:#000080; color:white; padding:2px 10px; font-weight:bold; margin-bottom:5px;">🎨 画風（Style）</div>
+                <label><input type="checkbox" value="pixel art style" data-jp="ドット絵"> ドット絵</label>
+                <label><input type="checkbox" value="studio ghibli anime style" data-jp="ジブリ風"> ジブリ風</label>
+                <label><input type="checkbox" value="digital painting" data-jp="デジタル絵"> デジタル絵</label>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <div style="background:#000080; color:white; padding:2px 10px; font-weight:bold; margin-bottom:5px;">🖼️ 背景（Background）</div>
+                <label><input type="checkbox" value="minimalist" data-jp="ミニマリスト"> ミニマリスト</label>
+                <label><input type="checkbox" value="simple background" data-jp="シンプルな背景"> シンプルな背景</label>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <div style="background:#000080; color:white; padding:2px 10px; font-weight:bold; margin-bottom:5px;">📸 写真品質（Quality）</div>
+                <label><input type="checkbox" value="hyper-realistic" data-jp="超リアル"> 超リアル</label>
+                <label><input type="checkbox" value="8k resolution" data-jp="8K解像度"> 8K解像度</label>
+                <label><input type="checkbox" value="macro shot" data-jp="マクロ撮影"> マクロ撮影</label>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <div style="background:#000080; color:white; padding:2px 10px; font-weight:bold; margin-bottom:5px;">🖋️ アート種別（Art Type）</div>
+                <label><input type="checkbox" value="fantasy art" data-jp="ファンタジーアート"> ファンタジーアート</label>
+                <label><input type="checkbox" value="photorealistic" data-jp="実写風"> 実写風</label>
+                <label><input type="checkbox" value="watercolor" data-jp="水彩"> 水彩</label>
+            </div>
         </div>
+
         <div class="desc">
-            <strong>🖌️ 作りたい画像の説明を入力：</strong><br>
-            <textarea id="userPrompt" placeholder="例: 夜空に浮かぶ城" ></textarea>
+            <strong>🖌️ 作りたい画像の説明を入力（日本語でOK）：</strong><br>
+            <textarea id="userPrompt" placeholder="例: 森の中を歩く白い鹿" ></textarea>
         </div>
-        <button id="genBtn" style="padding:6px 12px;background:#000080;color:#FFF;border:none;border-radius:3px;cursor:pointer;">🔧 プロンプト作成</button>
+
+        <button id="genBtn" style="padding:8px 16px; background:#000080; color:#FFF; border:none; border-radius:3px; cursor:pointer; font-weight:bold; width:100%;">🔧 プロンプト作成</button>
+
         <div class="result" id="resultArea" style="display:none;">
-            <h3>生成されたプロンプト</h3>
-            <p><strong>日本語:</strong> <pre id="jpPrompt"></pre><button class="copyBtn" data-target="jpPrompt">コピー</button></p>
-            <p><strong>English:</strong> <pre id="enPrompt"></pre><button class="copyBtn" data-target="enPrompt">Copy</button></p>
+            <h3>✨ 生成されたプロンプト ✨</h3>
+            
+            <p><strong>【画像生成用（英語）】</strong><br>
+            <small>※AIに貼り付けるのはこちらがおすすめ！</small>
+            <pre id="enPrompt"></pre>
+            <button class="copyBtn" data-target="enPrompt">コピー</button></p>
+
+            <p><strong>【日本語訳/構成】</strong>
+            <pre id="jpPrompt"></pre>
+            <button class="copyBtn" data-target="jpPrompt">コピー</button></p>
+
+            <p style="border-top: 1px dashed #000080; padding-top: 10px;">
+            <strong>【ネガティブプロンプト】</strong><br>
+            <small>※これを入れると品質が上がります（変な形やボケを防ぐ呪文）</small>
+            <pre id="negPrompt">worst quality, low quality, normal quality, blurry, lowres, text, watermark, logo, banner, extra digits, cropped, jpeg artifacts, signature, username, error, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck</pre>
+            <button class="copyBtn" data-target="negPrompt">ネガティブプロンプトをコピー</button></p>
+
             <div class="msg" id="msg"></div>
         </div>
-        <a href="../index.html" class="back">← トップへ戻る</a>
+
+        <a href="../index.html" class="back">← Machiroy's Room トップへ戻る</a>
     </div>
+
     <script>
         const genBtn = document.getElementById('genBtn');
         const resultArea = document.getElementById('resultArea');
@@ -52,39 +94,57 @@
         const msgEl = document.getElementById('msg');
         const copyButtons = document.querySelectorAll('.copyBtn');
 
-        function translateToEnglish(jp) {
-            // 簡易的な置換で英語化（デモ用）
-            return jp.replace(/日本語/g, 'English')
-                     .replace(/鮮やかな色彩/g, 'vivid colors')
-                     .replace(/高解像度/g, 'high resolution')
-                     .replace(/写実的なディテール/g, 'realistic details')
-                     .replace(/光と影のコントラスト/g, 'strong light and shadow contrast')
-                     .replace(/アート風/g, 'artistic style');
-        }
-
         genBtn.addEventListener('click', () => {
-            const checked = Array.from(document.querySelectorAll('.tips input:checked')).map(cb => cb.value);
+            const checkboxes = document.querySelectorAll('.tips input:checked');
+            const selectedEn = Array.from(checkboxes).map(cb => cb.value);
+            const selectedJp = Array.from(checkboxes).map(cb => cb.getAttribute('data-jp'));
             const userDesc = document.getElementById('userPrompt').value.trim();
-            if (checked.length === 0 && !userDesc) {
-                alert('TIPを選ぶか、画像の説明を入力してください。');
+
+            if (selectedEn.length === 0 && !userDesc) {
+                alert('キーワードを選ぶか、画像の説明を入力してください。');
                 return;
             }
-            const tipPart = checked.length ? checked.join('、') + '、' : '';
-            const jp = tipPart + (userDesc ? userDesc : '');
-            const en = translateToEnglish(jp);
-            jpPromptEl.textContent = jp;
-            enPromptEl.textContent = en;
+
+            // 英語プロンプトの組み立て
+            let enResult = "";
+            if (selectedEn.length > 0) {
+                enResult += selectedEn.join(', ') + ', ';
+            }
+            if (userDesc) {
+                enResult += userDesc; // 日本語のままでも最近のAIはある程度理解しますが、キーワードは英語が強いです
+            }
+
+            // 日本語プロンプト（構成確認用）の組み立て
+            let jpResult = "";
+            if (selectedJp.length > 0) {
+                jpResult += "【要素】" + selectedJp.join('、') + "\n";
+            }
+            if (userDesc) {
+                jpResult += "【説明】" + userDesc;
+            }
+
+            enPromptEl.textContent = enResult;
+            jpPromptEl.textContent = jpResult;
             resultArea.style.display = 'block';
-            msgEl.textContent = 'このプロンプトをコピーして、画像生成AI（Gemini、ChatGPT、Grok等）で生成してみましょう！';
+            msgEl.textContent = '完成！プロンプトとネガティブプロンプトをそれぞれコピーして、GeminiやChatGPT等に貼り付けてね！';
+            
+            // スクロールさせて結果を見やすくする
+            resultArea.scrollIntoView({ behavior: 'smooth' });
         });
 
+        // コピー機能
         copyButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetId = btn.getAttribute('data-target');
                 const text = document.getElementById(targetId).textContent;
                 navigator.clipboard.writeText(text).then(() => {
+                    const originalText = btn.textContent;
                     btn.textContent = 'Copied!';
-                    setTimeout(() => btn.textContent = 'コピー', 1500);
+                    btn.style.backgroundColor = '#008000';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.backgroundColor = '';
+                    }, 1500);
                 });
             });
         });
