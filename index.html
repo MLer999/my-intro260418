@@ -197,10 +197,9 @@
 
         <!-- お気に入り画像表示セクション -->
         <div class="footer-image">
-            <!-- クリックするたびに image.jpg と original.jpg を交互に切り替える -->
+            <!-- 侍テラコヤのフィロソフィー：URLではなく「クラス名」で状態を管理する方式 -->
             <img id="toggle-image" 
                  src="image.jpg" 
-                 data-mode="after"
                  onclick="toggleAIImage(this)" 
                  alt="お気に入り画像" 
                  style="width: 50%; cursor: pointer; border: 5px solid #000080;" 
@@ -214,19 +213,21 @@
     <script>
         // 画像の切り替え用関数
         function toggleAIImage(el) {
-            console.log("Current mode:", el.dataset.mode);
-            if (el.dataset.mode === 'after') {
-                el.src = "original.jpg";
-                el.dataset.mode = 'before';
-            } else {
+            // クラス「is-original」が付いているかどうかで判定（フィロソフィー）
+            if (el.classList.contains('is-original')) {
+                // オリジナル表示中なら清書後（image.jpg）へ
                 el.src = "image.jpg";
-                el.dataset.mode = 'after';
+                el.classList.remove('is-original');
+            } else {
+                // 清書後を表示中ならオリジナル（original.jpg）へ
+                el.src = "original.jpg";
+                el.classList.add('is-original');
             }
         }
 
         // 画像が読み込めなかった時の処理
         function handleImageError(el) {
-            console.error("Image load failed:", el.src);
+            console.error("画像読み込み失敗:", el.src);
             // 無限ループを防ぐ
             el.onerror = null;
             el.src = "https://via.placeholder.com/600x400?text=Image+Not+Found";
