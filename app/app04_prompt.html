@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>AI画像 プロンプト作成ツール - Machiroy's Room</title>
+    <style>
+        body {background-color:#E0FFFF;color:#000080;font-family:"MS Pゴシック","MS PGothic",sans-serif;margin:0;padding:0;}
+        .container {width:800px;margin:20px auto;padding:20px;background:#FFF;border:3px ridge #000080;box-shadow:5px5px15px rgba(0,0,0,0.2);}
+        h1 {text-align:center;background:#000080;color:#FFF;padding:10px;border-radius:5px;}
+        .tips {margin-bottom:20px;}
+        .tips label {display:inline-block;margin-right:10px;cursor:pointer;}
+        .desc {margin-bottom:20px;}
+        .desc textarea {width:100%;height:80px;font-size:14px;}
+        .result {margin-top:20px; background:#F0F8FF;padding:15px;border:2px inset #000080;}
+        .result pre {white-space:pre-wrap;word-break:break-word;}
+        .copyBtn {margin-left:10px;padding:4px 8px;background:#FF69B4;color:#FFF;border:none;border-radius:3px;cursor:pointer;}
+        .copyBtn:hover {background:#FF1493;}
+        .msg {margin-top:10px;color:#008000;font-weight:bold;}
+        a.back {display:inline-block;margin-top:20px;color:#000080;text-decoration:underline;font-weight:bold;}
+        a.back:hover {color:#FF69B4;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI画像 プロンプト作成ツール</h1>
+        <div class="tips">
+            <strong>📌 TIPs（1〜5）を選択してください：</strong><br>
+            <label><input type="checkbox" value="鮮やかな色彩"> TIP 1: 鮮やかな色彩</label>
+            <label><input type="checkbox" value="高解像度"> TIP 2: 高解像度</label>
+            <label><input type="checkbox" value="写実的なディテール"> TIP 3: 写実的なディテール</label>
+            <label><input type="checkbox" value="光と影のコントラスト"> TIP 4: 光と影のコントラスト</label>
+            <label><input type="checkbox" value="アート風"> TIP 5: アート風</label>
+        </div>
+        <div class="desc">
+            <strong>🖌️ 作りたい画像の説明を入力：</strong><br>
+            <textarea id="userPrompt" placeholder="例: 夜空に浮かぶ城" ></textarea>
+        </div>
+        <button id="genBtn" style="padding:6px 12px;background:#000080;color:#FFF;border:none;border-radius:3px;cursor:pointer;">🔧 プロンプト作成</button>
+        <div class="result" id="resultArea" style="display:none;">
+            <h3>生成されたプロンプト</h3>
+            <p><strong>日本語:</strong> <pre id="jpPrompt"></pre><button class="copyBtn" data-target="jpPrompt">コピー</button></p>
+            <p><strong>English:</strong> <pre id="enPrompt"></pre><button class="copyBtn" data-target="enPrompt">Copy</button></p>
+            <div class="msg" id="msg"></div>
+        </div>
+        <a href="../index.html" class="back">← トップへ戻る</a>
+    </div>
+    <script>
+        const genBtn = document.getElementById('genBtn');
+        const resultArea = document.getElementById('resultArea');
+        const jpPromptEl = document.getElementById('jpPrompt');
+        const enPromptEl = document.getElementById('enPrompt');
+        const msgEl = document.getElementById('msg');
+        const copyButtons = document.querySelectorAll('.copyBtn');
+
+        function translateToEnglish(jp) {
+            // 簡易的な置換で英語化（デモ用）
+            return jp.replace(/日本語/g, 'English')
+                     .replace(/鮮やかな色彩/g, 'vivid colors')
+                     .replace(/高解像度/g, 'high resolution')
+                     .replace(/写実的なディテール/g, 'realistic details')
+                     .replace(/光と影のコントラスト/g, 'strong light and shadow contrast')
+                     .replace(/アート風/g, 'artistic style');
+        }
+
+        genBtn.addEventListener('click', () => {
+            const checked = Array.from(document.querySelectorAll('.tips input:checked')).map(cb => cb.value);
+            const userDesc = document.getElementById('userPrompt').value.trim();
+            if (checked.length === 0 && !userDesc) {
+                alert('TIPを選ぶか、画像の説明を入力してください。');
+                return;
+            }
+            const tipPart = checked.length ? checked.join('、') + '、' : '';
+            const jp = tipPart + (userDesc ? userDesc : '');
+            const en = translateToEnglish(jp);
+            jpPromptEl.textContent = jp;
+            enPromptEl.textContent = en;
+            resultArea.style.display = 'block';
+            msgEl.textContent = 'このプロンプトをコピーして、画像生成AI（Gemini、ChatGPT、Grok等）で生成してみましょう！';
+        });
+
+        copyButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                const text = document.getElementById(targetId).textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => btn.textContent = 'コピー', 1500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
