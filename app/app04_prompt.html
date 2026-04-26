@@ -65,20 +65,22 @@
         <div class="result" id="resultArea" style="display:none;">
             <h3>✨ 生成されたプロンプト ✨</h3>
             
+            <div style="background:#FFFACD; border:2px dashed #FF8C00; padding:10px; margin-bottom:15px; font-size:13px;">
+                💡 <b>使い方：</b> 下の「まとめてコピー」ボタンを押して、GeminiやChatGPTに貼り付けるだけでOKです！<br>
+                ※ネガティブプロンプトは「出力してほしくないこと」をAIにお願いする呪文です。不要な場合は削除してね。
+            </div>
+
             <p><strong>【画像生成用（英語）】</strong><br>
-            <small>※AIに貼り付けるのはこちらがおすすめ！</small>
             <pre id="enPrompt"></pre>
-            <button class="copyBtn" data-target="enPrompt">コピー</button></p>
-
-            <p><strong>【日本語訳/構成】</strong>
-            <pre id="jpPrompt"></pre>
-            <button class="copyBtn" data-target="jpPrompt">コピー</button></p>
-
-            <p style="border-top: 1px dashed #000080; padding-top: 10px;">
-            <strong>【ネガティブプロンプト】</strong><br>
-            <small>※これを入れると品質が上がります（変な形やボケを防ぐ呪文）</small>
+            
+            <p><strong>【ネガティブプロンプト】</strong><br>
             <pre id="negPrompt">worst quality, low quality, normal quality, blurry, lowres, text, watermark, logo, banner, extra digits, cropped, jpeg artifacts, signature, username, error, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck</pre>
-            <button class="copyBtn" data-target="negPrompt">ネガティブプロンプトをコピー</button></p>
+            
+            <button class="copyBtn" id="copyAllBtn" style="width:100%; padding:15px; font-size:18px; background:#FF69B4;">📋 まとめてコピーしてAIに貼り付ける！</button>
+
+            <p style="margin-top:20px; border-top: 1px solid #ccc; padding-top:10px;"><strong>【日本語訳/構成案】</strong>
+            <pre id="jpPrompt"></pre>
+            <button class="copyBtn" data-target="jpPrompt" style="font-size:12px; background:#000080;">日本語のみコピー</button></p>
 
             <div class="msg" id="msg"></div>
         </div>
@@ -91,8 +93,9 @@
         const resultArea = document.getElementById('resultArea');
         const jpPromptEl = document.getElementById('jpPrompt');
         const enPromptEl = document.getElementById('enPrompt');
+        const negPromptEl = document.getElementById('negPrompt');
         const msgEl = document.getElementById('msg');
-        const copyButtons = document.querySelectorAll('.copyBtn');
+        const copyAllBtn = document.getElementById('copyAllBtn');
 
         genBtn.addEventListener('click', () => {
             const checkboxes = document.querySelectorAll('.tips input:checked');
@@ -106,12 +109,12 @@
             }
 
             // 英語プロンプトの組み立て
-            let enResult = "";
+            let enResult = "Prompt: ";
             if (selectedEn.length > 0) {
                 enResult += selectedEn.join(', ') + ', ';
             }
             if (userDesc) {
-                enResult += userDesc; // 日本語のままでも最近のAIはある程度理解しますが、キーワードは英語が強いです
+                enResult += userDesc;
             }
 
             // 日本語プロンプト（構成確認用）の組み立て
@@ -126,24 +129,38 @@
             enPromptEl.textContent = enResult;
             jpPromptEl.textContent = jpResult;
             resultArea.style.display = 'block';
-            msgEl.textContent = '完成！プロンプトとネガティブプロンプトをそれぞれコピーして、GeminiやChatGPT等に貼り付けてね！';
+            msgEl.textContent = '完成！下のピンクのボタンでまとめてコピーできるよ！';
             
-            // スクロールさせて結果を見やすくする
             resultArea.scrollIntoView({ behavior: 'smooth' });
         });
 
-        // コピー機能
-        copyButtons.forEach(btn => {
+        // まとめてコピー機能
+        copyAllBtn.addEventListener('click', () => {
+            const prompt = enPromptEl.textContent;
+            const negative = negPromptEl.textContent;
+            const combinedText = `${prompt}\nNegative prompt: ${negative}`;
+
+            navigator.clipboard.writeText(combinedText).then(() => {
+                const originalText = copyAllBtn.textContent;
+                copyAllBtn.textContent = '✅ まとめてコピー完了！';
+                copyAllBtn.style.backgroundColor = '#008000';
+                setTimeout(() => {
+                    copyAllBtn.textContent = originalText;
+                    copyAllBtn.style.backgroundColor = '#FF69B4';
+                }, 2000);
+            });
+        });
+
+        // 個別コピー機能（日本語用）
+        document.querySelectorAll('[data-target]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetId = btn.getAttribute('data-target');
                 const text = document.getElementById(targetId).textContent;
                 navigator.clipboard.writeText(text).then(() => {
                     const originalText = btn.textContent;
                     btn.textContent = 'Copied!';
-                    btn.style.backgroundColor = '#008000';
                     setTimeout(() => {
                         btn.textContent = originalText;
-                        btn.style.backgroundColor = '';
                     }, 1500);
                 });
             });
