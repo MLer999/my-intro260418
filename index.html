@@ -197,15 +197,15 @@
 
         <!-- お気に入り画像表示セクション -->
         <div class="footer-image">
-            <!-- 画像にカーソルを合わせると original.gif に切り替わるように設定 -->
-            <img src="./image.jpg" 
-                 onmouseover="this.src='./original.gif'" 
-                 onmouseout="this.src='./image.jpg'" 
+            <!-- クリックするたびに image.jpg と original.gif を交互に切り替える -->
+            <img id="toggle-image" 
+                 src="./image.jpg" 
+                 onclick="this.src = this.src.includes('original.gif') ? './image.jpg' : './original.gif'" 
                  alt="清書後の画像" 
                  style="width: 50%; cursor: pointer;" 
                  onerror="this.src='https://via.placeholder.com/600x400?text=Image+Not+Found'">
             <br><br>
-            <small>※カーソルを合わせると、オリジナルの絵（AI清書前）に戻ります。</small>
+            <small>※クリックすると、オリジナルの絵（AI清書前）と交互に切り替わります。</small>
         </div>
     </div>
 
