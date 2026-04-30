@@ -232,8 +232,7 @@
                 
                 // 【キリ番を判定する仕組み】
                 // ① 100の倍数チェック: 100, 200, 300...
-                // 【テスト用：5番ごとに判定】
-                const isKiribanHundred = currentCount > 0 && currentCount % 5 === 0;
+                const isKiribanHundred = currentCount > 0 && currentCount % 100 === 0;
 
                 // ② ぞろ目チェック（3桁以上）: 111, 222, 333, 1111, 2222...
                 // String()で数字を文字列に変換し、全桁が最初の1桁と同じか調べます
