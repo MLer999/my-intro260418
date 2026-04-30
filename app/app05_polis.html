@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>AIにできないことを考えてみる - Machiroy's App</title>
+    <style>
+        /* 2000年代風のレトロデザイン */
+        body {
+            background-color: #E0FFFF;
+            color: #000080;
+            font-family: "MS Pゴシック", "MS PGothic", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+
+        .container {
+            width: 800px;
+            margin: 20px auto;
+            border: 3px ridge #000080;
+            background-color: #FFFFFF;
+            padding: 20px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #000080;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .description {
+            background-color: #FFF0F5;
+            padding: 15px;
+            border: 2px solid #FF69B4;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Polis embed adjustment */
+        .polis-container {
+            min-height: 600px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>思考実験：AIにできないこと</h1>
+        
+        <div class="description">
+            AI時代に私たちが大切にすべきことは何か。あなたの意見を教えてください。<br>
+            このページでは、Polis（ポリス）を使用して、みんなの意見を集約・可視化しています。
+        </div>
+
+        <div class="polis-container">
+            <div class="polis" data-conversation_id="66zrkurddy"> </div>
+            <script async src="https://pol.is/embed.js"></script>
+        </div>
+
+        <a href="../index.html" class="back-link">← TOPページに戻る</a>
+    </div>
+</body>
+</html>
